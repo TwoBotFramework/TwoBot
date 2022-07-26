@@ -391,6 +391,173 @@ namespace twobot {
             响应内容为 JSON 数组，每个元素的内容和上面的 get_group_member_info 接口相同，但对于同一个群组的同一个成员，获取列表时和获取单独的成员信息时，某些字段可能有所不同，例如 area、title 等字段在获取列表时无法获得，具体应以单独的成员信息为准。
         */
         ApiResult getGroupMemberList(uint32_t group_id);
+
+        /**
+        get_group_honor_info 获取群荣誉信息
+        参数
+            字段名	数据类型	默认值	说明
+            group_id	number (int64)	-	群号
+            type	string	-	要获取的群荣誉类型，可传入 talkative performer legend strong_newbie emotion 以分别获取单个类型的群荣誉数据，或传入 all 获取所有数据
+        响应数据
+            字段名	数据类型	说明
+            group_id	number (int64)	群号
+            current_talkative	object	当前龙王，仅 type 为 talkative 或 all 时有数据
+            talkative_list	array	历史龙王，仅 type 为 talkative 或 all 时有数据
+            performer_list	array	群聊之火，仅 type 为 performer 或 all 时有数据
+            legend_list	array	群聊炽焰，仅 type 为 legend 或 all 时有数据
+            strong_newbie_list	array	冒尖小春笋，仅 type 为 strong_newbie 或 all 时有数据
+            emotion_list	array	快乐之源，仅 type 为 emotion 或 all 时有数据
+        
+        其中 current_talkative 字段的内容如下：
+            字段名	数据类型	说明
+            user_id	number (int64)	QQ 号
+            nickname	string	昵称
+            avatar	string	头像 URL
+            day_count	number (int32)	持续天数
+
+        其它各 *_list 的每个元素是一个 JSON 对象，内容如下：
+            字段名	数据类型	说明
+            user_id	number (int64)	QQ 号
+            nickname	string	昵称
+            avatar	string	头像 URL
+            description	string	荣誉描述
+        */
+        ApiResult getGroupHonorInfo(uint32_t group_id, const std::string& type);
+
+        /**
+        get_cookies 获取 Cookies
+        参数
+            字段名	数据类型	默认值	说明
+            domain	string	空	需要获取 cookies 的域名
+        响应数据
+            字段名	数据类型	说明
+            cookies	string	Cookies
+        */
+        ApiResult getCookies(const std::string& domain = "");
+
+        /**
+        get_csrf_token 获取 CSRF Token
+        参数
+            无
+
+        响应数据
+            字段名	数据类型	说明
+            token	number (int32)	CSRF Token
+        */
+        ApiResult getCsrfToken();
+
+        /**
+        get_credentials 获取 QQ 相关接口凭证
+        即上面两个接口的合并。
+
+        参数
+            字段名	数据类型	默认值	说明
+            domain	string	空	需要获取 cookies 的域名
+        响应数据
+            字段名	数据类型	说明
+            cookies	string	Cookies
+            csrf_token	number (int32)	CSRF Token
+        */
+        ApiResult getCredentials(const std::string& domain = "");
+
+        /**
+        get_record 获取语音
+        提示：要使用此接口，通常需要安装 ffmpeg，请参考 OneBot 实现的相关说明。
+
+        参数
+            字段名	数据类型	默认值	说明
+            file	string	-	收到的语音文件名（消息段的 file 参数），如 0B38145AA44505000B38145AA4450500.silk
+            out_format	string	-	要转换到的格式，目前支持 mp3、amr、wma、m4a、spx、ogg、wav、flac
+        响应数据
+            字段名	数据类型	说明
+            file	string	转换后的语音文件路径，如 /home/somebody/cqhttp/data/record/0B38145AA44505000B38145AA4450500.mp3
+        */
+        ApiResult getRecord(const std::string& file, const std::string& out_format);
+
+        /**
+        get_image 获取图片
+        参数
+            字段名	数据类型	默认值	说明
+            file	string	-	收到的图片文件名（消息段的 file 参数），如 6B4DE3DFD1BD271E3297859D41C530F5.jpg
+        响应数据
+            字段名	数据类型	说明
+            file	string	下载后的图片文件路径，如 /home/somebody/cqhttp/data/image/6B4DE3DFD1BD271E3297859D41C530F5.jpg
+        */
+        ApiResult getImage(const std::string& file);
+
+        /**
+        can_send_image 检查是否可以发送图片
+        参数
+            无
+
+        响应数据
+            字段名	数据类型	说明
+            yes	boolean	是或否
+        */
+        ApiResult canSendImage();
+
+        /**
+        can_send_record 检查是否可以发送语音
+        参数
+            无
+
+        响应数据
+            字段名	数据类型	说明
+            yes	boolean	是或否
+        */
+        ApiResult canSendRecord();
+
+        /**
+        get_status 获取运行状态
+        参数
+            无
+
+        响应数据
+            字段名	数据类型	说明
+            online	boolean	当前 QQ 在线，null 表示无法查询到在线状态
+            good	boolean	状态符合预期，意味着各模块正常运行、功能正常，且 QQ 在线
+            ……	-	OneBot 实现自行添加的其它内容
+        通常情况下建议只使用 online 和 good 这两个字段来判断运行状态，因为根据 OneBot 实现的不同，其它字段可能完全不同。
+        */
+        ApiResult getStatus();
+
+        /**
+        get_version_info 获取版本信息
+        参数
+         无
+
+        响应数据
+            字段名	数据类型	说明
+            app_name	string	应用标识，如 mirai-native
+            app_version	string	应用版本，如 1.2.3
+            protocol_version	string	OneBot 标准版本，如 v11
+            ……	-	OneBot 实现自行添加的其它内容
+        */
+        ApiResult getVersionInfo();
+
+        /**
+        set_restart 重启 OneBot 实现
+        由于重启 OneBot 实现同时需要重启 API 服务，这意味着当前的 API 请求会被中断，因此需要异步地重启，接口返回的 status 是 async。
+
+        参数
+            字段名	数据类型	默认值	说明
+            delay	number	0	要延迟的毫秒数，如果默认情况下无法重启，可以尝试设置延迟为 2000 左右
+        响应数据
+            无
+        */
+        ApiResult setRestart(int delay = 0);
+
+        /**
+        clean_cache 清理缓存
+        用于清理积攒了太多的缓存文件。
+
+        参数
+            无
+
+        响应数据
+            无
+        */
+        ApiResult cleanCache();
     protected:
         ApiSet (const Config &config);
         Config config;

@@ -278,4 +278,84 @@ namespace twobot {
         };
         return callApi("/get_group_member_list", data);
     }
+
+    // ApiResult getGroupHonorInfo(uint32_t group_id, const std::string& type);
+    ApiSet::ApiResult ApiSet::getGroupHonorInfo(uint32_t group_id, const std::string& type){
+        nlohmann::json data = {
+            {"group_id", group_id},
+            {"type", type}
+        };
+        return callApi("/get_group_honor_info", data);
+    }
+
+    // ApiResult getCookies(const std::string& domain = "");
+    ApiSet::ApiResult ApiSet::getCookies(const std::string& domain){
+        nlohmann::json data = {
+            {"domain", domain}
+        };
+        return callApi("/get_cookies", data);
+    }
+
+    // ApiResult getCsrfToken();
+    ApiSet::ApiResult ApiSet::getCsrfToken(){
+        return callApi("/get_csrf_token", {});
+    }
+
+    // ApiResult getCredentials(const std::string& domain = "");
+    ApiSet::ApiResult ApiSet::getCredentials(const std::string& domain){
+        nlohmann::json data = {
+            {"domain", domain}
+        };
+        return callApi("/get_credentials", data);
+    }
+
+    // ApiResult getRecord(const std::string& file, const std::string& out_format);
+    ApiSet::ApiResult ApiSet::getRecord(const std::string& file, const std::string& out_format){
+        nlohmann::json data = {
+            {"file", file},
+            {"out_format", out_format}
+        };
+        return callApi("/get_record", data);
+    }
+
+    // ApiResult getImage(const std::string& file);
+    ApiSet::ApiResult ApiSet::getImage(const std::string& file){
+        nlohmann::json data = {
+            {"file", file}
+        };
+        return callApi("/get_image", data);
+    }
+
+    // ApiResult canSendImage();
+    ApiSet::ApiResult ApiSet::canSendImage(){
+        return callApi("/can_send_image", {});
+    }
+
+    //  ApiResult canSendRecord();
+    ApiSet::ApiResult ApiSet::canSendRecord(){
+        return callApi("/can_send_record", {});
+    }
+
+    //  ApiResult getStatus();
+    ApiSet::ApiResult ApiSet::getStatus(){
+        return callApi("/get_status", {});
+    }
+
+    // ApiResult getVersionInfo();
+    ApiSet::ApiResult ApiSet::getVersionInfo(){
+        return callApi("/get_version_info", {});
+    }
+
+    // ApiResult setRestart(int delay = 0);
+    ApiSet::ApiResult ApiSet::setRestart(int delay){
+        nlohmann::json data = {
+            {"delay", delay}
+        };
+        return callApi("/set_restart", data);
+    }
+
+    // ApiResult cleanCache();
+    ApiSet::ApiResult ApiSet::cleanCache(){
+        return callApi("/clean_cache", {});
+    }
 }

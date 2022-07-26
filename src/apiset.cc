@@ -6,7 +6,7 @@ namespace twobot {
     bool ApiSet::testHttpConnection() {
         httplib::Client client(config.url, config.api_port);
         httplib::Headers headers = {
-            "Content-Type", "application/json"
+            {"Content-Type", "application/json"}
         };
         if(config.token.has_value()) {
             headers.insert(
@@ -29,7 +29,7 @@ namespace twobot {
         ApiResult result{false, {}};
         httplib::Client client(config.url, config.api_port);
          httplib::Headers headers = {
-            "Content-Type", "application/json"
+            {"Content-Type", "application/json"}
          };
         if(config.token.has_value()) {
             headers.insert(

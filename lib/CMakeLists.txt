@@ -1,4 +1,5 @@
 add_subdirectory(json)
 add_subdirectory(httplib)
-add_library(asio2 INTERFACE)
-target_include_directories(asio2 INTERFACE asio2/include)
+add_subdirectory(websocketpp)
+add_library(websocketpp INTERFACE)
+target_include_directories(websocketpp INTERFACE ./websocketpp/websocketpp)

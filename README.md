@@ -3,7 +3,7 @@
 ### TODO:
 + [x] 建立项目
 + [x] 实现大致框架
-+ [ ] 引入需要使用的第三方库
++ [x] 引入需要使用的第三方库
 + [ ] 支持onebot的所有功能
 + [ ] 书写完善的文档
 
@@ -11,4 +11,4 @@
 ### 鸣谢
 - [MIT] C++最好用的Http库: [cpp-httplib](https://github.com/yhirose/cpp-httplib/)
 - [MIT] C++最好用的Json库: [json](https://github.com/nlohmann/json)
-- [GPL] 马上应该删除的WebSocket库 [asio2](https://github.com/zhllxt/asio2)
+- [Unknown] WebSocket++ [WebSocket++](https://github.com/zaphoyd/websocketpp)

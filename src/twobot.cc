@@ -1,5 +1,5 @@
 #include "twobot.hh"
-
+#include <httplib.hh>
 namespace twobot{
   std::unique_ptr<BotInstance> BotInstance::createInstance(const Config &config) {
         return std::make_unique<BotInstance>(config);

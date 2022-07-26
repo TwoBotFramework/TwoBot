@@ -16,4 +16,9 @@ namespace twobot{
     {
 
     }
+
+    bool ApiSet::TestHttpConnection() {
+        // TODO: 实现ApiSet::TestHttpConnection
+        return false;
+    }
 };

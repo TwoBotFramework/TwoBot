@@ -13,6 +13,7 @@ namespace twobot {
 
     // Api集合，所有对机器人调用的接口都在这里
     struct ApiSet{
+        bool TestHttpConnection();
 //TODO: 实现ApiSet
     };
 

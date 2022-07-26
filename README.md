@@ -10,3 +10,5 @@
 
 ### 鸣谢
 - [MIT] C++最好用的Http库: [cpp-httplib](https://github.com/yhirose/cpp-httplib/)
+- [MIT] C++最好用的Json库: [json](https://github.com/nlohmann/json)
+- [GPL] 马上应该删除的WebSocket库 [asio2](https://github.com/zhllxt/asio2)

@@ -19,5 +19,5 @@
 - [MIT] Onebot 标准文档:    [onebot](https://github.com/botuniverse/onebot-11)
 - [MIT] C++最好用的Http库:  [cpp-httplib](https://github.com/yhirose/cpp-httplib/)
 - [MIT] C++最好用的Json库:  [json](https://github.com/nlohmann/json)
-- [Unknown] WebSocket++    [WebSocket++](https://github.com/zaphoyd/websocketpp)
+- [MIT] brynet             [brynet](https://github.com/IronsDu/brynet)
 - [Unknown] 微软的Copilot:  [Copilot](https://copilot.github.com/)

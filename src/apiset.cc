@@ -18,6 +18,8 @@ namespace twobot {
         }
 
         auto response = client.Get("/get_version_info", headers);
+        if(!response)
+            return false;
         return response->status == 200;
     }
 

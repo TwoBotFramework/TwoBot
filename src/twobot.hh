@@ -1,5 +1,6 @@
 #pragma once
 #include "nlohmann/json_fwd.hpp"
+#include <cstdint>
 #include <string>
 #include <string_view>
 #include <optional>
@@ -13,11 +14,11 @@
 namespace twobot
 {
     struct EventType{
-        std::string_view type;
-        std::string_view sub_type;
+        std::string_view post_type;
+        std::string_view message_type;
 
         bool operator==(const EventType &other) const {
-            return type == other.type && sub_type == other.sub_type;
+            return post_type == other.post_type && message_type == other.message_type;
         }
     };
 };
@@ -26,8 +27,8 @@ namespace std{
     template<>
     struct hash<twobot::EventType> {
         size_t operator()(const twobot::EventType &event) const {
-            auto left_hash = hash<std::string_view>()(event.type);
-            auto right_hash = hash<std::string_view>()(event.sub_type);
+            auto left_hash = hash<std::string_view>()(event.post_type);
+            auto right_hash = hash<std::string_view>()(event.message_type);
             return  left_hash ^ (right_hash << 1);
         }
     };
@@ -568,9 +569,16 @@ namespace twobot {
 
     struct Event{
         struct EventBase{
+            virtual ~EventBase() = default;
             nlohmann::json raw_msg;
-            // { message_type , sub_type }
+            // { post_type , message_type }
             virtual EventType getType() const = 0;
+            
+            static std::unique_ptr<EventBase> construct(const EventType &evnet);
+            
+            // 请勿自己调用
+            virtual void parse() = 0;
+            
         };
 
         // 以 以下类为模板参数 的onEvent必须在export_functions中调用一次，才能实现模板特化导出
@@ -578,12 +586,36 @@ namespace twobot {
             EventType getType() const override{
                 return {"message", "private"};
             }
+
+            uint64_t time; // 消息发送时间
+            uint32_t user_id; // 发送消息的人的QQ
+            uint32_t self_id; // 机器人自身QQ
+
+            std::string raw_message; //原始文本消息（含有CQ码）
+            std::string sub_type; //消息子类型
+
+            nlohmann::json sender; // 日后进一步处理
+        protected:
+            virtual void parse() override;
         };
 
         struct GroupMsg : EventBase{
             EventType getType() const override{
                 return {"message", "group"};
             }
+
+            uint64_t time; // 消息发送时间
+            uint32_t user_id; // 发送消息的人的QQ
+            uint32_t self_id; // 机器人自身QQ
+            uint32_t group_id; // 群QQ
+            
+            std::string raw_message; //原始文本消息（含有CQ码）
+            std::string group_name; // 群的名称
+            std::string sub_type; //消息子类型
+
+            nlohmann::json sender; // 日后进一步处理
+        protected:
+            virtual void parse() override;
         };
 
     };
@@ -606,6 +638,8 @@ namespace twobot {
         template<class EventType>
         void onEvent(std::function<void(const EventType &)> callback);
 
+        // [阻塞] 启动机器人
+        void start();
 
     protected:
         ApiSet apiSet;
@@ -613,7 +647,7 @@ namespace twobot {
     protected:
         explicit BotInstance(const Config &config);
         ~BotInstance() = default;
-        
+
         friend std::unique_ptr<BotInstance> std::make_unique<BotInstance>(const Config &config);
         friend std::default_delete<BotInstance>;
     };

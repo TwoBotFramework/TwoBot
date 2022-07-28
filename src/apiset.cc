@@ -1,5 +1,8 @@
+#include "nlohmann/json_fwd.hpp"
+#include <string>
 #include <twobot.hh>
 #include <httplib.h>
+#include <utility>
 
 namespace twobot {
     
@@ -41,8 +44,15 @@ namespace twobot {
                     )
             );
         }
-        httplib::Params params = data;
-        auto http_result= client.Post(api_name, headers, params);
+        
+        
+        auto http_result= client.Post(
+            api_name,
+            headers,
+            data.dump(),
+            "application/json"
+            );
+        
         if(http_result->status == 200) {
             result.first = true;
         }else{

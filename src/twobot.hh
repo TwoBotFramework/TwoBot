@@ -1,5 +1,4 @@
 #pragma once
-#include "nlohmann/json_fwd.hpp"
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -671,14 +670,14 @@ namespace twobot {
         // [阻塞] 启动机器人
         void start();
 
+        ~BotInstance() = default;
     protected:
         ApiSet apiSet;
         std::unordered_map<EventType, Callback> event_callbacks{};
     protected:
         explicit BotInstance(const Config &config);
-        ~BotInstance() = default;
 
-        friend std::unique_ptr<BotInstance> std::make_unique<BotInstance>(const twobot::Config &config);
+        friend std::unique_ptr<BotInstance> BotInstance::createInstance(const Config& config);
         friend std::default_delete<BotInstance>;
     };
 

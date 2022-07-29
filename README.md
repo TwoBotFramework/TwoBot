@@ -1,5 +1,26 @@
 ![TwoBot](https://socialify.git.ci/TwoBotFramework/TwoBot/image?description=1&font=KoHo&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F110024281%3Fs%3D200%26v%3D4&name=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Dark)
 
+### Build:
+#### 使用CMake + MinGW（未测试）
+```bash
+git clone https://github.com/TwoBotFramework/TwoBot --recursive 
+# 中国大陆用户可以尝试 git clone https://ghproxy.com/github.com/TwoBotFramework/TwoBot --recursive 
+# submodule 下载错误，可以分别下载那几个库然后放到lib/里面
+cd TwoBot
+mkdir build
+cmake -S . -B build
+cd build
+mingw32-make
+```
+### 使用Visual Studio 2017以上，需带CMake支持（VS2022已测试通过）
+```bash
+git clone https://github.com/TwoBotFramework/TwoBot --recursive 
+# 中国大陆用户可以尝试 git clone https://ghproxy.com/github.com/TwoBotFramework/TwoBot --recursive 
+# submodule 下载错误，可以分别下载那几个库然后放到lib/里面
+```
+然后用VS打开
+
+
 ### TODO:
 + [x] 建立项目
 + [x] 实现大致框架

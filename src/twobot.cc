@@ -18,7 +18,7 @@
 
 namespace twobot {
 	std::unique_ptr<BotInstance> BotInstance::createInstance(const Config& config) {
-		return std::make_unique<BotInstance>(config);
+		return std::unique_ptr<BotInstance>(new BotInstance{config} );
 	}
 
 	ApiSet& BotInstance::getApiSet() {

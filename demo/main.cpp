@@ -14,10 +14,10 @@ int main() {
     system("chcp 65001 && cls");
 
     auto instance = BotInstance::createInstance(Config{
-        .host       = "127.0.0.1",
-        .api_port   = 8080,
-        .ws_port    = 8081,
-        .token      = std::nullopt
+        "127.0.0.1",
+        8080,
+        8081,
+        std::nullopt
     });
 
 

@@ -1,0 +1,9 @@
+[submodule "lib/brynet"]
+	path = lib/brynet
+	url = https://github.com/IronsDu/brynet
+[submodule "lib/json"]
+	path = lib/json
+	url = https://github.com/nlohmann/json
+[submodule "lib/httplib"]
+	path = lib/httplib
+	url = https://github.com/yhirose/cpp-httplib

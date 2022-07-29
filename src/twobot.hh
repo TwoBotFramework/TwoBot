@@ -38,7 +38,7 @@ namespace twobot {
 
     // 服务器配置
     struct Config{
-        std::string url;
+        std::string host;
         std::uint16_t  api_port;
         std::uint16_t  ws_port;
         std::optional<std::string> token;
@@ -47,7 +47,7 @@ namespace twobot {
 
     // Api集合，所有对机器人调用的接口都在这里
     struct ApiSet{
-        bool testHttpConnection();
+        bool testConnection();
 //TODO: 实现ApiSet
         // 万api之母，负责提起所有的api的请求
         using ApiResult = std::pair<bool, nlohmann::json>;
@@ -567,7 +567,7 @@ namespace twobot {
 
 
 
-    struct Event{
+    namespace Event{
         struct EventBase{
             virtual ~EventBase() = default;
             nlohmann::json raw_msg;
@@ -648,7 +648,7 @@ namespace twobot {
             virtual void parse() override;
         };
 
-    };
+    }
 
     /// BotInstance是一个机器人实例，机器人实例必须通过BotInstance::createInstance()创建
     /// 因为采用了unique_ptr，所以必须通过std::move传递，可以99.99999%避免内存泄漏

@@ -87,8 +87,8 @@ namespace twobot {
 						event_callbacks[event_type](
 							reinterpret_cast<const Event::EventBase&>(
 								*event
-								)
-							);
+							)
+						);
 					}
 				}
 				catch (const std::exception& e) {
@@ -104,16 +104,17 @@ namespace twobot {
 			socket.setNodelay();
 				})
 			.WithMaxRecvBufferSize(1024)
-					.WithAddr(false, "0.0.0.0", websocket_port)
-					.WithEnterCallback([ws_enter_callback](const HttpSession::Ptr& httpSession, HttpSessionHandlers& handlers) {
-					handlers.setWSCallback(ws_enter_callback);
-						}).asyncRun()
-							;
+			.WithAddr(false, "0.0.0.0", websocket_port)
+			.WithEnterCallback([ws_enter_callback](const HttpSession::Ptr& httpSession, HttpSessionHandlers& handlers) {
+				handlers.setWSCallback(ws_enter_callback);
+				})
+			.asyncRun()
+			;
 
-						while (true)
-						{
-							std::this_thread::sleep_for(std::chrono::seconds(1));
-						}
+		while (true)
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+		}
 	}
 
 
@@ -127,8 +128,11 @@ namespace twobot {
 		});
 
 		// 仅仅为了特化onEvent模板
-		instance->onEvent<Event::GroupMsg>([](const Event::GroupMsg&) {});
-		instance->onEvent<Event::PrivateMsg>([](const Event::PrivateMsg&) {});
+		instance->onEvent<Event::GroupMsg>([](const auto&) {});
+		instance->onEvent<Event::PrivateMsg>([](const auto&) {});
+		instance->onEvent<Event::EnableEvent>([](const auto&) {});
+		instance->onEvent<Event::DisableEvent>([](const auto&) {});
+		instance->onEvent<Event::ConnectEvent>([](const auto&) {});
 	}
 
 	std::unique_ptr<Event::EventBase> Event::EventBase::construct(const EventType& event) {
@@ -173,6 +177,16 @@ namespace twobot {
 	}
 
 	void Event::EnableEvent::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+	}
+
+	void Event::DisableEvent::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+	}
+
+	void Event::ConnectEvent::parse(){
 		this->time = this->raw_msg["time"];
 		this->self_id = raw_msg["self_id"];
 	}

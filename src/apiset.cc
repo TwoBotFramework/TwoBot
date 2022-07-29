@@ -6,8 +6,8 @@
 
 namespace twobot {
     
-    bool ApiSet::testHttpConnection() {
-        httplib::Client client(config.url, config.api_port);
+    bool ApiSet::testConnection() {
+        httplib::Client client(config.host, config.api_port);
         httplib::Headers headers = {
             {"Content-Type", "application/json"}
         };
@@ -32,7 +32,7 @@ namespace twobot {
 
     ApiSet::ApiResult ApiSet::callApi(const std::string &api_name, const nlohmann::json &data) {
         ApiResult result{false, {}};
-        httplib::Client client(config.url, config.api_port);
+        httplib::Client client(config.host, config.api_port);
          httplib::Headers headers = {
             {"Content-Type", "application/json"}
          };

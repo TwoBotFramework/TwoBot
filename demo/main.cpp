@@ -29,11 +29,16 @@ int main() {
     instance->onEvent<GroupMsg>([&instance](const GroupMsg & msg){
         if(msg.raw_message == "你好")
             instance->getApiSet().sendGroupMsg(msg.group_id, "你好，我是twobot！");
+        else if(msg.raw_message.find("AT我") != std::string::npos){
+            std::string at = "[CQ:at,qq=" + std::to_string(msg.user_id) + "]";
+            instance->getApiSet().sendGroupMsg(msg.group_id, at + "要我at你干啥？");
+        }
     });
 
     instance->onEvent<PrivateMsg>([&instance](const PrivateMsg & msg){
         if(msg.raw_message == "你好")
             instance->getApiSet().sendPrivateMsg(msg.user_id, "你好，我是twobot！");
+        
     });
 
     instance->onEvent<EnableEvent>([&instance](const EnableEvent & msg){

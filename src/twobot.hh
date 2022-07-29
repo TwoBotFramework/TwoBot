@@ -15,10 +15,10 @@ namespace twobot
 {
     struct EventType{
         std::string_view post_type;
-        std::string_view message_type;
+        std::string_view sub_type;
 
         bool operator==(const EventType &other) const {
-            return post_type == other.post_type && message_type == other.message_type;
+            return post_type == other.post_type && sub_type == other.sub_type;
         }
     };
 };
@@ -28,7 +28,7 @@ namespace std{
     struct hash<twobot::EventType> {
         size_t operator()(const twobot::EventType &event) const {
             auto left_hash = hash<std::string_view>()(event.post_type);
-            auto right_hash = hash<std::string_view>()(event.message_type);
+            auto right_hash = hash<std::string_view>()(event.sub_type);
             return  left_hash ^ (right_hash << 1);
         }
     };
@@ -66,7 +66,7 @@ namespace twobot {
             字段名	数据类型	说明
             message_id	number (int32)	消息 ID
         */
-        ApiResult sendPrivateMsg(uint32_t user_id, const std::string &message, bool auto_escape = false);
+        ApiResult sendPrivateMsg(uint64_t user_id, const std::string &message, bool auto_escape = false);
         
         /**
         send_group_msg 发送群消息
@@ -79,7 +79,7 @@ namespace twobot {
             字段名	数据类型	说明
             message_id	number (int32)	消息 ID
         */
-        ApiResult sendGroupMsg(uint32_t group_id, const std::string &message, bool auto_escape = false);
+        ApiResult sendGroupMsg(uint64_t group_id, const std::string &message, bool auto_escape = false);
         
         /**
         send_msg 发送消息
@@ -94,7 +94,7 @@ namespace twobot {
             字段名	数据类型	说明
             message_id	number (int32)	消息 ID
         */
-        ApiResult sendMsg(std::string message_type, uint32_t user_id, uint32_t group_id, const std::string &message, bool auto_escape = false);
+        ApiResult sendMsg(std::string message_type, uint64_t user_id, uint64_t group_id, const std::string &message, bool auto_escape = false);
         
         /**
         delete_msg 撤回消息
@@ -142,7 +142,7 @@ namespace twobot {
         响应数据
             无
         **/
-        ApiResult sendLike(uint32_t user_id, uint32_t times = 1);
+        ApiResult sendLike(uint64_t user_id, uint32_t times = 1);
 
         /**
         set_group_kick 群组踢人
@@ -154,7 +154,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupKick(uint32_t group_id, uint32_t user_id, bool reject_add_request = false);
+        ApiResult setGroupKick(uint64_t group_id, uint64_t user_id, bool reject_add_request = false);
 
         /**
         set_group_ban 群组单人禁言
@@ -166,7 +166,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupBan(uint32_t group_id, uint32_t user_id, uint32_t duration = 30 * 60);
+        ApiResult setGroupBan(uint64_t group_id, uint64_t user_id, uint32_t duration = 30 * 60);
 
         /** 
         set_group_anonymous_ban 群组匿名用户禁言
@@ -181,7 +181,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupAnonymousBan(uint32_t group_id, const std::string& anonymous, const std::string& flag, uint32_t duration = 30 * 60);
+        ApiResult setGroupAnonymousBan(uint64_t group_id, const std::string& anonymous, const std::string& flag, uint32_t duration = 30 * 60);
 
         /** 
         set_group_whole_ban 群组全员禁言
@@ -192,7 +192,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupWholeBan(uint32_t group_id, bool enable = true);
+        ApiResult setGroupWholeBan(uint64_t group_id, bool enable = true);
 
         /**
         set_group_admin 群组设置管理员
@@ -204,7 +204,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupAdmin(uint32_t group_id, uint32_t user_id, bool enable = true);
+        ApiResult setGroupAdmin(uint64_t group_id, uint64_t user_id, bool enable = true);
 
         /**
         set_group_anonymous 群组匿名设置
@@ -215,7 +215,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupAnonymous(uint32_t group_id, bool enable = true);
+        ApiResult setGroupAnonymous(uint64_t group_id, bool enable = true);
 
         /**
         set_group_card 群名片设置（群备注）
@@ -227,7 +227,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupCard(uint32_t group_id, uint32_t user_id, const std::string& card);
+        ApiResult setGroupCard(uint64_t group_id, uint64_t user_id, const std::string& card);
 
         /**
         set_group_name 设置群名
@@ -238,7 +238,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupName(uint32_t group_id, const std::string& name);
+        ApiResult setGroupName(uint64_t group_id, const std::string& name);
 
         /**
         set_group_leave 退出群组
@@ -249,7 +249,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupLeave(uint32_t group_id, bool is_dismiss = false);
+        ApiResult setGroupLeave(uint64_t group_id, bool is_dismiss = false);
 
 
         /**
@@ -263,7 +263,7 @@ namespace twobot {
         响应数据
             无
         */
-        ApiResult setGroupSpecialTitle(uint32_t group_id, uint32_t user_id, const std::string& special_title, int32_t duration = -1); 
+        ApiResult setGroupSpecialTitle(uint64_t group_id, uint64_t user_id, const std::string& special_title, int32_t duration = -1); 
 
         /**
         set_friend_add_request 处理加好友请求
@@ -315,7 +315,7 @@ namespace twobot {
             sex	string	性别，male 或 female 或 unknown
             age	number (int32)	年龄
         */
-        ApiResult getStrangerInfo(uint32_t user_id, bool no_cache = false);
+        ApiResult getStrangerInfo(uint64_t user_id, bool no_cache = false);
 
         /**
         get_friend_list 获取好友列表
@@ -344,7 +344,7 @@ namespace twobot {
             member_count	number (int32)	成员数
             max_member_count	number (int32)	最大成员数（群容量）
         */
-        ApiResult getGroupInfo(uint32_t group_id, bool no_cache = false);
+        ApiResult getGroupInfo(uint64_t group_id, bool no_cache = false);
 
         /**
         get_group_list 获取群列表
@@ -381,7 +381,7 @@ namespace twobot {
             title_expire_time	number (int32)	专属头衔过期时间戳
             card_changeable	boolean	是否允许修改群名片
         */
-        ApiResult getGroupMemberInfo(uint32_t group_id, uint32_t user_id, bool no_cache = false);
+        ApiResult getGroupMemberInfo(uint64_t group_id, uint64_t user_id, bool no_cache = false);
 
         /**
         get_group_member_list 获取群成员列表
@@ -391,7 +391,7 @@ namespace twobot {
         响应数据
             响应内容为 JSON 数组，每个元素的内容和上面的 get_group_member_info 接口相同，但对于同一个群组的同一个成员，获取列表时和获取单独的成员信息时，某些字段可能有所不同，例如 area、title 等字段在获取列表时无法获得，具体应以单独的成员信息为准。
         */
-        ApiResult getGroupMemberList(uint32_t group_id);
+        ApiResult getGroupMemberList(uint64_t group_id);
 
         /**
         get_group_honor_info 获取群荣誉信息
@@ -423,7 +423,7 @@ namespace twobot {
             avatar	string	头像 URL
             description	string	荣誉描述
         */
-        ApiResult getGroupHonorInfo(uint32_t group_id, const std::string& type);
+        ApiResult getGroupHonorInfo(uint64_t group_id, const std::string& type);
 
         /**
         get_cookies 获取 Cookies
@@ -588,8 +588,8 @@ namespace twobot {
             }
 
             uint64_t time; // 消息发送时间
-            uint32_t user_id; // 发送消息的人的QQ
-            uint32_t self_id; // 机器人自身QQ
+            uint64_t user_id; // 发送消息的人的QQ
+            uint64_t self_id; // 机器人自身QQ
 
             std::string raw_message; //原始文本消息（含有CQ码）
             std::string sub_type; //消息子类型
@@ -605,15 +605,45 @@ namespace twobot {
             }
 
             uint64_t time; // 消息发送时间
-            uint32_t user_id; // 发送消息的人的QQ
-            uint32_t self_id; // 机器人自身QQ
-            uint32_t group_id; // 群QQ
+            uint64_t user_id; // 发送消息的人的QQ
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
             
             std::string raw_message; //原始文本消息（含有CQ码）
             std::string group_name; // 群的名称
             std::string sub_type; //消息子类型
 
             nlohmann::json sender; // 日后进一步处理
+        protected:
+            virtual void parse() override;
+        };
+
+        struct EnableEvent : EventBase{
+            EventType getType() const override{
+                return {"meta_event", "enable"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+        protected:
+            virtual void parse() override;
+        };
+
+        struct DisableEvent : EventBase{
+            EventType getType() const override{
+                return {"meta_event", "disable"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+        protected:
+            virtual void parse() override;
+        };
+
+        struct ConnectEvent : EventBase{
+            EventType getType() const override{
+                return {"meta_event", "connect"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
         protected:
             virtual void parse() override;
         };

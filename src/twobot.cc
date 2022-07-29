@@ -1,7 +1,8 @@
 #include "twobot.hh"
-#include "nlohmann/json_fwd.hpp"
+#include "nlohmann/json.hpp"
 #include <cstddef>
 #include <exception>
+#include <iostream>
 #include <memory>
 #include <string>
 #ifdef _WIN32
@@ -34,8 +35,14 @@ namespace twobot {
 	void BotInstance::onEvent(std::function<void(const EventType&)> callback) {
 		EventType event{};
 		this->event_callbacks[event.getType()] = Callback([callback](const Event::EventBase& event) {
-			callback(static_cast<const EventType&>(event));
-			});
+			try{
+				callback(static_cast<const EventType&>(event));
+			}catch(const std::exception &e){
+				const auto & eventType = event.getType();
+				std::cerr << "EventType: {" << eventType.post_type << ", " << eventType.sub_type << "}\n";
+				std::cerr << "\tBotInstance::onEvent error: " << e.what() << std::endl;
+			}
+		});
 	}
 
 	void BotInstance::start() {
@@ -51,9 +58,11 @@ namespace twobot {
 			const std::string& payload) {
 				try {
 					nlohmann::json json_payload = nlohmann::json::parse(payload);
-					// meta_event_type 暂时不作解析
-					if (json_payload.contains("meta_event_type"))
-						return;
+					
+					// 忽略心跳包
+					if(json_payload.contains("meta_event_type"))
+						if(json_payload["meta_event_type"] == "heartbeat")
+							return;
 
 					auto post_type = (std::string)json_payload["post_type"];
 
@@ -115,23 +124,29 @@ namespace twobot {
 			8080,
 			8081,
 			std::nullopt
-			});
+		});
 
 		// 仅仅为了特化onEvent模板
 		instance->onEvent<Event::GroupMsg>([](const Event::GroupMsg&) {});
 		instance->onEvent<Event::PrivateMsg>([](const Event::PrivateMsg&) {});
 	}
 
-	std::unique_ptr<Event::EventBase> Event::EventBase::construct(const EventType& evnet) {
-		if (evnet.post_type == "message") {
-			if (evnet.message_type == "group") {
+	std::unique_ptr<Event::EventBase> Event::EventBase::construct(const EventType& event) {
+		if (event.post_type == "message") {
+			if (event.sub_type == "group") {
 				return std::unique_ptr<Event::EventBase>(new Event::GroupMsg());
-			}
-			else if (evnet.message_type == "private") {
+			} else if (event.sub_type == "private") {
 				return std::unique_ptr<Event::EventBase>(new Event::PrivateMsg());
 			}
+		} else if (event.post_type == "meta_event") {
+			if(event.sub_type == "enable"){
+				return std::unique_ptr<Event::EventBase>(new Event::EnableEvent());
+			}else if(event.sub_type == "disable"){
+				return std::unique_ptr<Event::EventBase>(new Event::DisableEvent());
+			}else if(event.sub_type == "connect"){
+				return std::unique_ptr<Event::EventBase>(new Event::ConnectEvent());
+			}
 		}
-
 		return nullptr;
 	}
 
@@ -155,6 +170,11 @@ namespace twobot {
 		this->raw_message = raw_msg["raw_message"];
         this->sub_type = raw_msg["sub_type"]; 
         this->sender = raw_msg["sender"];
+	}
+
+	void Event::EnableEvent::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
 	}
 
 };

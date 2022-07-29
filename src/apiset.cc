@@ -69,7 +69,7 @@ namespace twobot {
         return result;
     }
 
-    ApiSet::ApiResult ApiSet::sendPrivateMsg(uint32_t user_id, const std::string &message, bool auto_escape){
+    ApiSet::ApiResult ApiSet::sendPrivateMsg(uint64_t user_id, const std::string &message, bool auto_escape){
         nlohmann::json data = {
             {"user_id", user_id},
             {"message", message},
@@ -78,7 +78,7 @@ namespace twobot {
         return callApi("/send_private_msg", data);
     }
 
-    ApiSet::ApiResult ApiSet::sendGroupMsg(uint32_t group_id, const std::string &message, bool auto_escape){
+    ApiSet::ApiResult ApiSet::sendGroupMsg(uint64_t group_id, const std::string &message, bool auto_escape){
         nlohmann::json data = {
             {"group_id", group_id},
             {"message", message},
@@ -87,7 +87,7 @@ namespace twobot {
         return callApi("/send_group_msg", data);
     }
 
-    ApiSet::ApiResult ApiSet::sendMsg(std::string message_type, uint32_t user_id, uint32_t group_id, const std::string &message, bool auto_escape){
+    ApiSet::ApiResult ApiSet::sendMsg(std::string message_type, uint64_t user_id, uint64_t group_id, const std::string &message, bool auto_escape){
         nlohmann::json data = {
             {"message_type", message_type},
             {"user_id", user_id},
@@ -119,7 +119,7 @@ namespace twobot {
         return callApi("/get_forward_msg", data);
     }
 
-    ApiSet::ApiResult ApiSet::sendLike(uint32_t user_id, uint32_t times){
+    ApiSet::ApiResult ApiSet::sendLike(uint64_t user_id, uint32_t times){
         nlohmann::json data = {
             {"user_id", user_id},
             {"times", times}
@@ -127,7 +127,7 @@ namespace twobot {
         return callApi("/send_like", data);
     }
 
-    ApiSet::ApiResult ApiSet::setGroupKick(uint32_t group_id, uint32_t user_id, bool reject_add_request){
+    ApiSet::ApiResult ApiSet::setGroupKick(uint64_t group_id, uint64_t user_id, bool reject_add_request){
         nlohmann::json data = {
             {"group_id", group_id},
             {"user_id", user_id},
@@ -136,7 +136,7 @@ namespace twobot {
         return callApi("/set_group_kick", data);
     }
 
-    ApiSet::ApiResult ApiSet::setGroupBan(uint32_t group_id, uint32_t user_id, uint32_t duration){
+    ApiSet::ApiResult ApiSet::setGroupBan(uint64_t group_id, uint64_t user_id, uint32_t duration){
         nlohmann::json data = {
             {"group_id", group_id},
             {"user_id", user_id},
@@ -145,7 +145,7 @@ namespace twobot {
         return callApi("/set_group_ban", data);
     }
 
-    ApiSet::ApiResult ApiSet::setGroupAnonymousBan(uint32_t group_id, const std::string& anonymous, const std::string& flag, uint32_t duration){
+    ApiSet::ApiResult ApiSet::setGroupAnonymousBan(uint64_t group_id, const std::string& anonymous, const std::string& flag, uint32_t duration){
         nlohmann::json data = {
             {"group_id", group_id},
             {"anonymous", anonymous},
@@ -155,8 +155,8 @@ namespace twobot {
         return callApi("/set_group_anonymous_ban", data);
     }
 
-    //ApiResult setGroupWholeBan(uint32_t group_id, bool enable = true);
-    ApiSet::ApiResult ApiSet::setGroupWholeBan(uint32_t group_id, bool enable){
+    //ApiResult setGroupWholeBan(uint64_t group_id, bool enable = true);
+    ApiSet::ApiResult ApiSet::setGroupWholeBan(uint64_t group_id, bool enable){
         nlohmann::json data = {
             {"group_id", group_id},
             {"enable", enable}
@@ -164,7 +164,7 @@ namespace twobot {
         return callApi("/set_group_whole_ban", data);
     }
 
-    ApiSet::ApiResult ApiSet::setGroupAdmin(uint32_t group_id, uint32_t user_id, bool enable){
+    ApiSet::ApiResult ApiSet::setGroupAdmin(uint64_t group_id, uint64_t user_id, bool enable){
         nlohmann::json data = {
             {"group_id", group_id},
             {"user_id", user_id},
@@ -173,7 +173,7 @@ namespace twobot {
         return callApi("/set_group_admin", data);
     }
 
-    ApiSet::ApiResult ApiSet::setGroupAnonymous(uint32_t group_id, bool enable){
+    ApiSet::ApiResult ApiSet::setGroupAnonymous(uint64_t group_id, bool enable){
         nlohmann::json data = {
             {"group_id", group_id},
             {"enable", enable}
@@ -181,7 +181,7 @@ namespace twobot {
         return callApi("/set_group_anonymous", data);
     }
 
-    ApiSet::ApiResult ApiSet::setGroupCard(uint32_t group_id, uint32_t user_id, const std::string& card){
+    ApiSet::ApiResult ApiSet::setGroupCard(uint64_t group_id, uint64_t user_id, const std::string& card){
         nlohmann::json data = {
             {"group_id", group_id},
             {"user_id", user_id},
@@ -190,8 +190,8 @@ namespace twobot {
         return callApi("/set_group_card", data);
     }
 
-    // ApiResult setGroupName(uint32_t group_id, const std::string& name);
-    ApiSet::ApiResult ApiSet::setGroupName(uint32_t group_id, const std::string& name){
+    // ApiResult setGroupName(uint64_t group_id, const std::string& name);
+    ApiSet::ApiResult ApiSet::setGroupName(uint64_t group_id, const std::string& name){
         nlohmann::json data = {
             {"group_id", group_id},
             {"name", name}
@@ -199,8 +199,8 @@ namespace twobot {
         return callApi("/set_group_name", data);
     }
 
-    // ApiResult setGroupLeave(uint32_t group_id, bool is_dismiss = false);
-    ApiSet::ApiResult ApiSet::setGroupLeave(uint32_t group_id, bool is_dismiss){
+    // ApiResult setGroupLeave(uint64_t group_id, bool is_dismiss = false);
+    ApiSet::ApiResult ApiSet::setGroupLeave(uint64_t group_id, bool is_dismiss){
         nlohmann::json data = {
             {"group_id", group_id},
             {"is_dismiss", is_dismiss}
@@ -208,8 +208,8 @@ namespace twobot {
         return callApi("/set_group_leave", data);
     }
 
-    // ApiResult setGroupSpecialTitle(uint32_t group_id, uint32_t user_id, const std::string& special_title, int32_t duration = -1); 
-    ApiSet::ApiResult ApiSet::setGroupSpecialTitle(uint32_t group_id, uint32_t user_id, const std::string& special_title, int32_t duration){
+    // ApiResult setGroupSpecialTitle(uint64_t group_id, uint64_t user_id, const std::string& special_title, int32_t duration = -1); 
+    ApiSet::ApiResult ApiSet::setGroupSpecialTitle(uint64_t group_id, uint64_t user_id, const std::string& special_title, int32_t duration){
         nlohmann::json data = {
             {"group_id", group_id},
             {"user_id", user_id},
@@ -245,8 +245,8 @@ namespace twobot {
         return callApi("/get_login_info", {});
     }
 
-    // ApiResult getStrangerInfo(uint32_t user_id, bool no_cache = false);
-    ApiSet::ApiResult ApiSet::getStrangerInfo(uint32_t user_id, bool no_cache){
+    // ApiResult getStrangerInfo(uint64_t user_id, bool no_cache = false);
+    ApiSet::ApiResult ApiSet::getStrangerInfo(uint64_t user_id, bool no_cache){
         nlohmann::json data = {
             {"user_id", user_id},
             {"no_cache", no_cache}
@@ -259,8 +259,8 @@ namespace twobot {
         return callApi("/get_friend_list", {});
     }
 
-    // ApiResult getGroupInfo(uint32_t group_id, bool no_cache = false);
-    ApiSet::ApiResult ApiSet::getGroupInfo(uint32_t group_id, bool no_cache){
+    // ApiResult getGroupInfo(uint64_t group_id, bool no_cache = false);
+    ApiSet::ApiResult ApiSet::getGroupInfo(uint64_t group_id, bool no_cache){
         nlohmann::json data = {
             {"group_id", group_id},
             {"no_cache", no_cache}
@@ -273,8 +273,8 @@ namespace twobot {
         return callApi("/get_group_list", {});
     }
 
-    // ApiResult getGroupMemberInfo(uint32_t group_id, uint32_t user_id, bool no_cache = false);
-    ApiSet::ApiResult ApiSet::getGroupMemberInfo(uint32_t group_id, uint32_t user_id, bool no_cache){
+    // ApiResult getGroupMemberInfo(uint64_t group_id, uint64_t user_id, bool no_cache = false);
+    ApiSet::ApiResult ApiSet::getGroupMemberInfo(uint64_t group_id, uint64_t user_id, bool no_cache){
         nlohmann::json data = {
             {"group_id", group_id},
             {"user_id", user_id},
@@ -283,16 +283,16 @@ namespace twobot {
         return callApi("/get_group_member_info", data);
     }
 
-    // ApiResult getGroupMemberList(uint32_t group_id);
-    ApiSet::ApiResult ApiSet::getGroupMemberList(uint32_t group_id){
+    // ApiResult getGroupMemberList(uint64_t group_id);
+    ApiSet::ApiResult ApiSet::getGroupMemberList(uint64_t group_id){
         nlohmann::json data = {
             {"group_id", group_id}
         };
         return callApi("/get_group_member_list", data);
     }
 
-    // ApiResult getGroupHonorInfo(uint32_t group_id, const std::string& type);
-    ApiSet::ApiResult ApiSet::getGroupHonorInfo(uint32_t group_id, const std::string& type){
+    // ApiResult getGroupHonorInfo(uint64_t group_id, const std::string& type);
+    ApiSet::ApiResult ApiSet::getGroupHonorInfo(uint64_t group_id, const std::string& type){
         nlohmann::json data = {
             {"group_id", group_id},
             {"type", type}

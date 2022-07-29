@@ -1,7 +1,7 @@
 ![TwoBot](https://socialify.git.ci/TwoBotFramework/TwoBot/image?description=1&font=KoHo&forks=1&issues=1&language=1&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F110024281%3Fs%3D200%26v%3D4&name=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Dark)
 
 ### Build:
-#### 使用CMake + MinGW（未测试）
+#### 使用CMake + MinGW（未测试）, Linux用户可参考此文档（GCC 8测试通过）
 ```bash
 git clone https://github.com/TwoBotFramework/TwoBot --recursive 
 # 中国大陆用户可以尝试 git clone https://ghproxy.com/github.com/TwoBotFramework/TwoBot --recursive 

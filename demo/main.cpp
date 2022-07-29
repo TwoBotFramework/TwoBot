@@ -1,5 +1,4 @@
-﻿#include <process.h>
-#include <twobot.hh>
+﻿#include <twobot.hh>
 #include <iostream>
 
 /// 警告: 这个项目使用了JSON for modern C++, 必须使用UTF8编码，不然会出现异常。

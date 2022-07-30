@@ -4,8 +4,7 @@
 #### 使用CMake + MinGW（未测试）, Linux用户可参考此文档（GCC 8测试通过）
 ```bash
 git clone https://github.com/TwoBotFramework/TwoBot --recursive 
-# 中国大陆用户可以尝试 git clone https://ghproxy.com/github.com/TwoBotFramework/TwoBot --recursive 
-# submodule 下载错误，可以分别下载那几个库然后放到lib/里面
+# 中国大陆用户可以尝试下载Release里面的包
 cd TwoBot
 mkdir build
 cmake -S . -B build
@@ -15,8 +14,7 @@ mingw32-make
 #### 使用Visual Studio 2017以上，需带CMake支持（VS2022已测试通过）
 ```bash
 git clone https://github.com/TwoBotFramework/TwoBot --recursive 
-# 中国大陆用户可以尝试 git clone https://ghproxy.com/github.com/TwoBotFramework/TwoBot --recursive 
-# submodule 下载错误，可以分别下载那几个库然后放到lib/里面
+# 中国大陆用户可以尝试下载Release里面的包
 ```
 然后用VS打开
 

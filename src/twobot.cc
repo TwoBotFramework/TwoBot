@@ -130,7 +130,6 @@ namespace twobot {
 		});
 
 		// 仅仅为了特化onEvent模板
-		// TODO: 在这里伪装调用一下，特化一下模板
 		instance->onEvent<Event::GroupMsg>([](const auto&) {});
 		instance->onEvent<Event::PrivateMsg>([](const auto&) {});
 		instance->onEvent<Event::EnableEvent>([](const auto&) {});
@@ -140,10 +139,14 @@ namespace twobot {
 		instance->onEvent<Event::GroupAdminNotice>([](const auto&) {});
 		instance->onEvent<Event::GroupDecreaseNotice>([](const auto&) {});
 		instance->onEvent<Event::GroupInceaseNotice>([](const auto&) {});
+		instance->onEvent<Event::GroupBanNotice>([](const auto&) {});
+		instance->onEvent<Event::FriendAddNotice>([](const auto&) {});
+		instance->onEvent<Event::GroupRecallNotice>([](const auto&) {});
+		instance->onEvent<Event::FriendRecallNotice>([](const auto&) {});
+		instance->onEvent<Event::GroupNotifyNotice>([](const auto&) {});
 	}
 
 	std::unique_ptr<Event::EventBase> Event::EventBase::construct(const EventType& event) {
-		// TODO: 这里要根据event的类型来创建对应的Event对象
 		if (event.post_type == "message") {
 			if (event.sub_type == "group") {
 				return std::unique_ptr<Event::EventBase>(new Event::GroupMsg());
@@ -167,12 +170,21 @@ namespace twobot {
 				return std::unique_ptr<Event::EventBase>(new Event::GroupDecreaseNotice());
 			} else if (event.sub_type == "group_increase"){
 				return std::unique_ptr<Event::EventBase>(new Event::GroupInceaseNotice());
+			} else if (event.sub_type == "group_ban"){
+				return std::unique_ptr<Event::EventBase>( new Event::GroupBanNotice());
+			} else if (event.sub_type == "friend_add"){
+				return std::unique_ptr<Event::EventBase>(new Event::FriendAddNotice());
+			} else if (event.sub_type == "group_recall"){
+				return std::unique_ptr<Event::EventBase>(new Event::GroupRecallNotice());
+			} else if (event.sub_type == "friend_recall"){
+				return std::unique_ptr<Event::EventBase>(new Event::FriendRecallNotice());
+			} else if (event.sub_type == "group_notify"){
+				return std::unique_ptr<Event::EventBase>(new Event::GroupNotifyNotice());
 			}
 		}
 		return nullptr;
 	}
 
-// TODO: parse要这边写
 	void Event::GroupMsg::parse() {
         this->time = this->raw_msg["time"];
 		this->user_id = raw_msg["user_id"];
@@ -262,4 +274,57 @@ namespace twobot {
 			this->sub_type = INVITE;
 	}
 
+	void Event::GroupBanNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->group_id = raw_msg["group_id"];
+		this->user_id = raw_msg["user_id"];
+		this->operator_id = raw_msg["operator_id"];
+		this->duration = raw_msg["duration"];
+		this->sub_type = ( raw_msg["sub_type"] == "ban" ) ? BAN : LIFT_BAN;
+	}
+
+	void Event::FriendAddNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->user_id = raw_msg["user_id"];
+	}
+	
+	void Event::FriendRecallNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->user_id = raw_msg["user_id"];
+		this->message_id = raw_msg["message_id"];
+	}
+
+	void Event::GroupRecallNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->group_id = raw_msg["group_id"];
+		this->message_id = raw_msg["message_id"];
+		this->operator_id = raw_msg["operator_id"];
+		this->user_id = raw_msg["user_id"];
+	}
+
+	void Event::GroupNotifyNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->user_id = raw_msg["user_id"];
+		this->group_id = raw_msg["group_id"];
+		if(raw_msg["sub_type"] == "poke"){
+			this->sub_type = POKE;
+			this->target_id = raw_msg["target_id"];
+		} else if(raw_msg["sub_type"] == "lucky_king"){
+			this->sub_type = LUCKY_KING;
+			this->target_id = raw_msg["target_id"];
+		} else{
+			this->sub_type = HONOR;
+			if(raw_msg["honor_type"] == "talkative")
+				this->honor_type = TALKATIVE;
+			else if(raw_msg["honor_type"] == "performer")
+				this->honor_type = PERFORMER;
+			else if(raw_msg["honor_type"] == "emotion")
+				this->honor_type = EMOTION;
+		}
+	}
 };

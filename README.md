@@ -25,9 +25,9 @@ git clone https://github.com/TwoBotFramework/TwoBot --recursive
 + [x] 建立项目
 + [x] 实现大致框架
 + [x] 引入需要使用的第三方库
-+ [ ] 支持onebot的所有功能
++ [x] 支持onebot的所有功能
     - [x] 实现Onebot HttpAPI的调用
-    - [ ] 实现Onebot WebSocket接收消息
+    - [x] 实现Onebot WebSocket接收消息
 + [ ] 书写完善的文档
 
 ## FAQ

@@ -720,7 +720,88 @@ namespace twobot {
             virtual void parse() override;
         };
 
-        // TODO: 在这里 声明事件类
+        struct GroupBanNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_ban"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t user_id; // 被禁言的人的QQ
+            uint64_t operator_id; // 操作者QQ 如果是主动禁言，和user_id一致
+            uint64_t duration; //禁言时长，单位秒
+            enum {
+                BAN, // 禁言
+                LIFT_BAN, // 解除禁言
+            } sub_type; // 事件子类型，分别表示禁言、解除禁言
+        protected:
+            virtual void parse() override;
+        };
+
+        struct FriendAddNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "friend_add"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t user_id; // 新添加好友 QQ 号
+        protected:
+            virtual void parse() override;
+        };
+
+        // 群消息撤回事件
+        struct GroupRecallNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_recall"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t message_id; // 消息ID
+            uint64_t user_id; // 发送者QQ
+            uint64_t operator_id; // 操作者QQ
+        
+        protected:
+            virtual void parse() override;
+        };
+
+        // 好友消息撤回事件
+        struct FriendRecallNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "friend_recall"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t user_id; // 发送者QQ
+            uint64_t message_id; // 消息ID
+        protected:
+            virtual void parse() override;
+        };
+
+        // 群内通知事件，如戳一戳、群红包运气王、群成员荣誉变更
+        struct GroupNotifyNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_notify"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t user_id; // 发送者QQ,如戳一戳的发送者，红包的发送者，荣誉变更者
+            enum {
+                POKE, //戳一戳
+                LUCKY_KING, //群红包运气王
+                HONOR, //群成员荣誉变更
+            } sub_type; // 事件子类型，分别表示戳一戳、群红包运气王、群成员荣誉变更
+            std::optional<uint64_t> target_id = std::nullopt; // 如果是戳一戳，则为被戳的人的QQ，如果是群红包运气王，则为群红包的ID
+            enum HonorType{
+                TALKATIVE, // 龙王
+                PERFORMER, // 群聊之火
+                EMOTION,   // 快乐源泉
+            };
+            std::optional<HonorType> honor_type = std::nullopt; // 荣誉类型
+        protected:
+            virtual void parse() override;
+        };            
     }
 
     /// BotInstance是一个机器人实例，机器人实例必须通过BotInstance::createInstance()创建

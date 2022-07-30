@@ -46,7 +46,6 @@ namespace twobot {
     // Api集合，所有对机器人调用的接口都在这里
     struct ApiSet{
         bool testConnection();
-//TODO: 实现ApiSet
         // 万api之母，负责提起所有的api的请求
         using ApiResult = std::pair<bool, nlohmann::json>;
         ApiResult callApi(const std::string &api_name, const nlohmann::json &data);
@@ -590,7 +589,11 @@ namespace twobot {
             uint64_t self_id; // 机器人自身QQ
 
             std::string raw_message; //原始文本消息（含有CQ码）
-            std::string sub_type; //消息子类型
+            enum{
+                FRIEND, // 好友
+                GROUP,  // 群私聊
+                OTHER   // 其他
+            } sub_type; //消息子类型
 
             nlohmann::json sender; // 日后进一步处理
         protected:
@@ -609,7 +612,11 @@ namespace twobot {
             
             std::string raw_message; //原始文本消息（含有CQ码）
             std::string group_name; // 群的名称
-            std::string sub_type; //消息子类型
+            enum{
+                NORMAL,     // 正常消息
+                ANONYMOUS,  // 系统消息
+                NOTICE,     // 通知消息，如 管理员已禁止群内匿名聊天
+            } sub_type; //消息子类型
 
             nlohmann::json sender; // 日后进一步处理
         protected:
@@ -646,6 +653,74 @@ namespace twobot {
             virtual void parse() override;
         };
 
+        struct GroupUploadNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_upload"};
+            }
+
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t user_id; // 上传文件的人的QQ
+            nlohmann::json file; // 上传的文件信息,日后再进一步解析
+        protected:
+            virtual void parse() override;
+        };
+
+        struct GroupAdminNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_admin"};
+            }
+
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t user_id; // 管理员的QQ
+            enum {
+                SET,
+                UNSET,
+            } sub_type; // 事件子类型，分别表示设置和取消设置
+        protected:
+            virtual void parse() override;
+        };
+
+        struct GroupDecreaseNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_decrease"};
+            }
+
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t user_id; // 用户QQ
+            uint64_t operator_id; // 操作者QQ 如果是主动退群，和user_id一致
+            enum {
+                LEAVE,      // 退出
+                KICK,       // 被踢出
+                KICK_ME,    // 机器人被踢出
+            } sub_type; // 事件子类型，分别表示主动退群、成员被踢、登录号被踢
+        protected:
+            virtual void parse() override;
+        };
+
+        struct GroupInceaseNotice : EventBase{
+            EventType getType() const override{
+                return {"notice", "group_increase"};
+            }
+            uint64_t time; // 事件产生的时间
+            uint64_t self_id; // 机器人自身QQ
+            uint64_t group_id; // 群QQ
+            uint64_t user_id; // 用户QQ
+            uint64_t operator_id; // 操作者QQ 如果是主动加群，和user_id一致
+            enum {
+                APPROVE, // 同意入群
+                INVITE,  // 邀请入群
+            } sub_type; // 事件子类型，分别表示管理员已同意入群、管理员邀请入群
+        protected:
+            virtual void parse() override;
+        };
+
+        // TODO: 在这里 声明事件类
     }
 
     /// BotInstance是一个机器人实例，机器人实例必须通过BotInstance::createInstance()创建

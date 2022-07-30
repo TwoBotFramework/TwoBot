@@ -69,8 +69,10 @@ namespace twobot {
 					std::string sub_type;
 					if (post_type == "message")
 						sub_type = (std::string)json_payload["message_type"];
-					else
+					else if(post_type == "meta_event")
 						sub_type = (std::string)json_payload["sub_type"];
+					else if(post_type == "notice")
+						sub_type = (std::string)json_payload["notice_type"];
 
 					EventType event_type = {
 						post_type,
@@ -128,14 +130,20 @@ namespace twobot {
 		});
 
 		// 仅仅为了特化onEvent模板
+		// TODO: 在这里伪装调用一下，特化一下模板
 		instance->onEvent<Event::GroupMsg>([](const auto&) {});
 		instance->onEvent<Event::PrivateMsg>([](const auto&) {});
 		instance->onEvent<Event::EnableEvent>([](const auto&) {});
 		instance->onEvent<Event::DisableEvent>([](const auto&) {});
 		instance->onEvent<Event::ConnectEvent>([](const auto&) {});
+		instance->onEvent<Event::GroupUploadNotice>([](const auto&) {});
+		instance->onEvent<Event::GroupAdminNotice>([](const auto&) {});
+		instance->onEvent<Event::GroupDecreaseNotice>([](const auto&) {});
+		instance->onEvent<Event::GroupInceaseNotice>([](const auto&) {});
 	}
 
 	std::unique_ptr<Event::EventBase> Event::EventBase::construct(const EventType& event) {
+		// TODO: 这里要根据event的类型来创建对应的Event对象
 		if (event.post_type == "message") {
 			if (event.sub_type == "group") {
 				return std::unique_ptr<Event::EventBase>(new Event::GroupMsg());
@@ -150,11 +158,21 @@ namespace twobot {
 			}else if(event.sub_type == "connect"){
 				return std::unique_ptr<Event::EventBase>(new Event::ConnectEvent());
 			}
+		} else if(event.post_type == "notice"){
+			if(event.sub_type == "group_upload"){
+				return std::unique_ptr<Event::EventBase>(new Event::GroupUploadNotice());
+			} else if (event.sub_type == "group_admin"){
+				return std::unique_ptr<Event::EventBase>(new Event::GroupAdminNotice());
+			} else if (event.sub_type == "group_decrease"){
+				return std::unique_ptr<Event::EventBase>(new Event::GroupDecreaseNotice());
+			} else if (event.sub_type == "group_increase"){
+				return std::unique_ptr<Event::EventBase>(new Event::GroupInceaseNotice());
+			}
 		}
 		return nullptr;
 	}
 
-
+// TODO: parse要这边写
 	void Event::GroupMsg::parse() {
         this->time = this->raw_msg["time"];
 		this->user_id = raw_msg["user_id"];
@@ -162,8 +180,13 @@ namespace twobot {
 		this->group_id = raw_msg["group_id"];
 		this->raw_message = raw_msg["raw_message"];
 		this->group_name = raw_msg["group_name"];
-        this->sub_type = raw_msg["sub_type"]; 
-
+        //this->sub_type = raw_msg["sub_type"]; 
+		if(raw_msg["sub_type"] == "normal")
+			this->sub_type = NORMAL;
+		else if(raw_msg["sub_type"] == "anonymous")
+			this->sub_type = ANONYMOUS;
+		else if(raw_msg["sub_type"] == "notice")
+			this->sub_type = NOTICE;
         this->sender = raw_msg["sender"];
 	}
 
@@ -172,7 +195,13 @@ namespace twobot {
 		this->user_id = raw_msg["user_id"];
 		this->self_id = raw_msg["self_id"];
 		this->raw_message = raw_msg["raw_message"];
-        this->sub_type = raw_msg["sub_type"]; 
+        // this->sub_type = raw_msg["sub_type"];
+		if(raw_msg["sub_type"] == "friend")
+			this->sub_type = FRIEND;
+		if(raw_msg["sub_type"] == "group")
+			this->sub_type = GROUP;
+		if(raw_msg["sub_type"] == "other")
+			this->sub_type = OTHER;
         this->sender = raw_msg["sender"];
 	}
 
@@ -189,6 +218,48 @@ namespace twobot {
 	void Event::ConnectEvent::parse(){
 		this->time = this->raw_msg["time"];
 		this->self_id = raw_msg["self_id"];
+	}
+
+	void Event::GroupUploadNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->group_id = raw_msg["group_id"];
+		this->user_id = raw_msg["user_id"];
+		this->file = raw_msg["file"];
+	}
+
+	void Event::GroupAdminNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->group_id = raw_msg["group_id"];
+		this->user_id = raw_msg["user_id"];
+		this->sub_type = ( raw_msg["sub_type"] == "set" ) ? SET : UNSET;
+	}
+
+	void Event::GroupDecreaseNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->group_id = raw_msg["group_id"];
+		this->user_id = raw_msg["user_id"];
+		this->operator_id = raw_msg["operator_id"];
+		if(raw_msg["sub_type"] == "leave")
+			this->sub_type = LEAVE;
+		else if(raw_msg["sub_type"] == "kick")
+			this->sub_type = KICK;
+		else 
+			this->sub_type = KICK_ME;
+	}
+
+	void Event::GroupInceaseNotice::parse(){
+		this->time = this->raw_msg["time"];
+		this->self_id = raw_msg["self_id"];
+		this->group_id = raw_msg["group_id"];
+		this->user_id = raw_msg["user_id"];
+		this->operator_id = raw_msg["operator_id"];
+		if(raw_msg["sub_type"] == "approve")
+			this->sub_type = APPROVE;
+		else if(raw_msg["sub_type"] == "invite")
+			this->sub_type = INVITE;
 	}
 
 };

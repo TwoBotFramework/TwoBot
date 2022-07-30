@@ -832,7 +832,6 @@ namespace twobot {
     protected:
         explicit BotInstance(const Config &config);
 
-        friend std::unique_ptr<BotInstance> BotInstance::createInstance(const Config& config);
         friend std::default_delete<BotInstance>;
     };
 

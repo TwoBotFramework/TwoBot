@@ -11,7 +11,7 @@ int main() {
     using namespace twobot::Event;
 
     // 解决UTF8编码，中文乱码问题，不需要可以不加
-    // ssystem("chcp 65001 && cls");
+    // system("chcp 65001 && cls");
 
     auto instance = BotInstance::createInstance(Config{
         "127.0.0.1",

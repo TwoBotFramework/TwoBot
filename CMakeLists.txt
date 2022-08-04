@@ -16,7 +16,7 @@ add_subdirectory(lib)
 target_link_libraries(TwoBot PUBLIC nlohmann_json::nlohmann_json brynet httplib::httplib)
 target_compile_definitions(TwoBot PUBLIC _SILENCE_CXX17_C_HEADER_DEPRECATION_WARNING)
 
-add_executable(TwoBot-demo demo/main.cpp)
+add_executable(TwoBot-demo demo/main.cc)
 target_link_libraries(TwoBot-demo TwoBot)
 
 if(MSVC)

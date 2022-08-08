@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/brynet" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/httplib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/json" vcs="Git" />
   </component>
 </project>

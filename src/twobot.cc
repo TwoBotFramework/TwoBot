@@ -96,7 +96,7 @@ namespace twobot {
 				catch (const std::exception& e) {
 					std::cerr << "WebSocket CallBack Exception: " << e.what() << std::endl;
 				}
-				httpSession->send(R"({"status": "ok", "code": 200})");
+				httpSession->send("");
 
 		};
 

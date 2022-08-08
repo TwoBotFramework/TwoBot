@@ -106,7 +106,7 @@ namespace twobot {
 			.AddSocketProcess([](TcpSocket& socket) {
 			socket.setNodelay();
 				})
-			.WithMaxRecvBufferSize(1024)
+			.WithMaxRecvBufferSize(10240)
 			.WithAddr(false, "0.0.0.0", websocket_port)
 			.WithEnterCallback([ws_enter_callback](const HttpSession::Ptr& httpSession, HttpSessionHandlers& handlers) {
 				handlers.setWSCallback(ws_enter_callback);

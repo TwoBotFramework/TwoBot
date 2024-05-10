@@ -192,7 +192,7 @@ namespace twobot {
 		this->self_id = raw_msg["self_id"];
 		this->group_id = raw_msg["group_id"];
 		this->raw_message = raw_msg["raw_message"];
-		this->group_name = raw_msg["group_name"];
+		// this->group_name = raw_msg["group_name"];
         //this->sub_type = raw_msg["sub_type"]; 
 		if(raw_msg["sub_type"] == "normal")
 			this->sub_type = NORMAL;

@@ -611,7 +611,7 @@ namespace twobot {
             uint64_t group_id; // 群QQ
             
             std::string raw_message; //原始文本消息（含有CQ码）
-            std::string group_name; // 群的名称
+            // std::string group_name; // 群的名称
             enum{
                 NORMAL,     // 正常消息
                 ANONYMOUS,  // 系统消息
